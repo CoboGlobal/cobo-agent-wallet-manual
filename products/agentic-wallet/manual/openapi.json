@@ -3,7 +3,7 @@
   "info": {
     "title": "Cobo Agentic Wallet Service",
     "description": "Unified wallet engine for human and agent principals",
-    "version": "1.2.4"
+    "version": "1.3.0"
   },
   "paths": {
     "/health": {
@@ -1731,60 +1731,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/StandardResponse_WalletReshareResponse_"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Validation Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/WrappedValidationError"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v1/wallets/restore-node": {
-      "post": {
-        "tags": [
-          "Wallets"
-        ],
-        "summary": "Restore local TSS node binding",
-        "description": "Called by the app after restoring its local TSS node files from backup. The node binding is scoped to the authenticated principal, not a specific wallet, because one app node may hold key shares for multiple vaults.",
-        "operationId": "restore_node",
-        "parameters": [
-          {
-            "name": "X-API-Key",
-            "in": "header",
-            "required": false,
-            "schema": {
-              "title": "X-Api-Key",
-              "type": "string",
-              "nullable": true
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/WalletRestoreNodeRequest"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/StandardResponse_WalletRestoreNodeResponse_"
                 }
               }
             }
@@ -5028,90 +4974,6 @@
         }
       }
     },
-    "/api/v1/recipes/pact-templates": {
-      "get": {
-        "tags": [
-          "Recipes"
-        ],
-        "summary": "List pact templates",
-        "description": "List all pact templates. Optionally filter by recipe_slug. Requires service credential authentication.",
-        "operationId": "list_pact_templates",
-        "parameters": [
-          {
-            "name": "offset",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "integer",
-              "maximum": 9223372036854775807,
-              "minimum": 0,
-              "description": "Number of items to skip.",
-              "default": 0,
-              "title": "Offset"
-            },
-            "description": "Number of items to skip."
-          },
-          {
-            "name": "limit",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "integer",
-              "maximum": 100,
-              "minimum": 1,
-              "description": "Maximum number of items to return.",
-              "default": 20,
-              "title": "Limit"
-            },
-            "description": "Maximum number of items to return."
-          },
-          {
-            "name": "recipe_slug",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "description": "Filter by exact recipe slug.",
-              "title": "Recipe Slug",
-              "type": "string",
-              "nullable": true
-            },
-            "description": "Filter by exact recipe slug."
-          },
-          {
-            "name": "X-Assistant-Service-Key",
-            "in": "header",
-            "required": false,
-            "schema": {
-              "title": "X-Assistant-Service-Key",
-              "type": "string",
-              "nullable": true
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/StandardResponse_list_PactTemplateRead__"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Validation Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/WrappedValidationError"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/api/v1/suggestions/{key}": {
       "get": {
         "tags": [
@@ -5302,30 +5164,18 @@
             "description": "The access scopes granted to this key."
           },
           "expires_at": {
-            "anyOf": [
-              {
-                "type": "string",
-                "format": "date-time"
-              },
-              {
-                "type": "null"
-              }
-            ],
             "title": "Expires At",
-            "description": "The expiry timestamp for this key, in ISO 8601 format. Null if no expiry."
+            "description": "The expiry timestamp for this key, in ISO 8601 format. Null if no expiry.",
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
           },
           "last_used_at": {
-            "anyOf": [
-              {
-                "type": "string",
-                "format": "date-time"
-              },
-              {
-                "type": "null"
-              }
-            ],
             "title": "Last Used At",
-            "description": "The timestamp when this key was last used, in ISO 8601 format. Null if never used."
+            "description": "The timestamp when this key was last used, in ISO 8601 format. Null if never used.",
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
           },
           "is_revoked": {
             "type": "boolean",
@@ -5333,17 +5183,11 @@
             "description": "Whether this key has been revoked. `true`: revoked. `false`: active."
           },
           "revoked_at": {
-            "anyOf": [
-              {
-                "type": "string",
-                "format": "date-time"
-              },
-              {
-                "type": "null"
-              }
-            ],
             "title": "Revoked At",
-            "description": "The timestamp when this key was revoked, in ISO 8601 format. Null if not revoked."
+            "description": "The timestamp when this key was revoked, in ISO 8601 format. Null if not revoked.",
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
           },
           "created_at": {
             "type": "string",
@@ -5475,17 +5319,11 @@
             "description": "The audit log entry ID."
           },
           "principal_id": {
-            "anyOf": [
-              {
-                "type": "string",
-                "format": "uuid"
-              },
-              {
-                "type": "null"
-              }
-            ],
             "title": "Principal Id",
-            "description": "The ID of the principal that performed the action. Null for system-initiated actions."
+            "description": "The ID of the principal that performed the action. Null for system-initiated actions.",
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
           },
           "principal_type": {
             "type": "string",
@@ -5493,41 +5331,23 @@
             "description": "The principal type that performed the action (for example, `agent`, `human`)."
           },
           "wallet_id": {
-            "anyOf": [
-              {
-                "type": "string",
-                "format": "uuid"
-              },
-              {
-                "type": "null"
-              }
-            ],
             "title": "Wallet Id",
-            "description": "The wallet ID associated with this audit entry. Null for non-wallet actions."
+            "description": "The wallet ID associated with this audit entry. Null for non-wallet actions.",
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
           },
           "resource_type": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
             "title": "Resource Type",
-            "description": "The type of resource involved (for example, `wallet`, `delegation`, `policy`)."
+            "description": "The type of resource involved (for example, `wallet`, `delegation`, `policy`).",
+            "type": "string",
+            "nullable": true
           },
           "resource_id": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
             "title": "Resource Id",
-            "description": "The ID of the resource involved."
+            "description": "The ID of the resource involved.",
+            "type": "string",
+            "nullable": true
           },
           "action": {
             "$ref": "#/components/schemas/AuditAction",
@@ -5550,16 +5370,10 @@
             "description": "The request data associated with this action."
           },
           "error": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
             "title": "Error",
-            "description": "The error message, if the action resulted in an error."
+            "description": "The error message, if the action resulted in an error.",
+            "type": "string",
+            "nullable": true
           },
           "created_at": {
             "type": "string",
@@ -7412,6 +7226,15 @@
             "type": "array",
             "nullable": true
           },
+          "recent_txs": {
+            "title": "Recent Txs",
+            "description": "Most recent transactions (up to 5) submitted under this pact, newest first. Null if none.",
+            "items": {
+              "$ref": "#/components/schemas/RecentTxSummary"
+            },
+            "type": "array",
+            "nullable": true
+          },
           "created_at": {
             "type": "string",
             "format": "date-time",
@@ -7440,6 +7263,31 @@
         ],
         "title": "PactPublicRead",
         "description": "Public pact detail response without delegation internals."
+      },
+      "PactRemaining": {
+        "properties": {
+          "tx_count_remaining": {
+            "title": "Tx Count Remaining",
+            "description": "Transactions remaining before pact completes. Null if no TX_COUNT condition is set.",
+            "type": "integer",
+            "nullable": true
+          },
+          "usd_remaining": {
+            "title": "Usd Remaining",
+            "description": "Remaining USD budget as a decimal string. Null if no AMOUNT_SPENT_USD condition is set.",
+            "type": "string",
+            "nullable": true
+          },
+          "time_remaining_seconds": {
+            "title": "Time Remaining Seconds",
+            "description": "Seconds until pact expires. Null if pact has no expiry.",
+            "type": "integer",
+            "nullable": true
+          }
+        },
+        "type": "object",
+        "title": "PactRemaining",
+        "description": "Remaining quota for an active pact. Fields are null when the corresponding condition is not set."
       },
       "PactSpec-Input": {
         "properties": {
@@ -7655,17 +7503,11 @@
             "description": "When the pact was submitted."
           },
           "expires_at": {
-            "anyOf": [
-              {
-                "type": "string",
-                "format": "date-time"
-              },
-              {
-                "type": "null"
-              }
-            ],
             "title": "Expires At",
-            "description": "When the pact expires."
+            "description": "When the pact expires.",
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
           },
           "recipe_slugs": {
             "title": "Recipe Slugs",
@@ -7679,6 +7521,11 @@
           "operator": {
             "description": "Operator principal. Null if the principal row is missing (e.g. legacy data).",
             "$ref": "#/components/schemas/PrincipalRead",
+            "nullable": true
+          },
+          "remaining": {
+            "description": "Remaining quota for this active pact. Null for non-active pacts or when no measurable completion conditions are set.",
+            "$ref": "#/components/schemas/PactRemaining",
             "nullable": true
           }
         },
@@ -7694,44 +7541,6 @@
         ],
         "title": "PactSummary",
         "description": "Lightweight pact item for list responses."
-      },
-      "PactTemplateRead": {
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid",
-            "title": "Id"
-          },
-          "recipe_slug": {
-            "type": "string",
-            "title": "Recipe Slug"
-          },
-          "template": {
-            "additionalProperties": true,
-            "type": "object",
-            "title": "Template"
-          },
-          "created_at": {
-            "type": "string",
-            "format": "date-time",
-            "title": "Created At"
-          },
-          "updated_at": {
-            "type": "string",
-            "format": "date-time",
-            "title": "Updated At"
-          }
-        },
-        "type": "object",
-        "required": [
-          "id",
-          "recipe_slug",
-          "template",
-          "created_at",
-          "updated_at"
-        ],
-        "title": "PactTemplateRead",
-        "description": "Response for a pact template."
       },
       "PactUpdateCompletionConditionsRequest": {
         "properties": {
@@ -8002,16 +7811,10 @@
             "description": "The ID of the wallet owner who must approve this operation."
           },
           "request_id": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
             "title": "Request Id",
-            "description": "The client-supplied request identifier from the original transfer or contract call."
+            "description": "The client-supplied request identifier from the original transfer or contract call.",
+            "type": "string",
+            "nullable": true
           },
           "wallet_id": {
             "type": "string",
@@ -8026,17 +7829,11 @@
             "description": "The ID of the principal that initiated this operation."
           },
           "delegation_id": {
-            "anyOf": [
-              {
-                "type": "string",
-                "format": "uuid"
-              },
-              {
-                "type": "null"
-              }
-            ],
             "title": "Delegation Id",
-            "description": "The delegation ID under which this operation was initiated. Null for owner-initiated operations."
+            "description": "The delegation ID under which this operation was initiated. Null for owner-initiated operations.",
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
           },
           "operation_type": {
             "$ref": "#/components/schemas/PendingOperationType",
@@ -8049,86 +7846,50 @@
             "description": "The original operation parameters (transfer amount, destination address, contract call data, etc.)."
           },
           "policy_decision": {
-            "anyOf": [
-              {
-                "additionalProperties": true,
-                "type": "object"
-              },
-              {
-                "type": "null"
-              }
-            ],
             "title": "Policy Decision",
-            "description": "The policy decision details that triggered the approval requirement."
+            "description": "The policy decision details that triggered the approval requirement.",
+            "additionalProperties": true,
+            "type": "object",
+            "nullable": true
           },
           "status": {
             "$ref": "#/components/schemas/PendingOperationStatus",
             "description": "The pending operation status. Possible values: `pending`, `approved`, `rejected`, `expired`, `cancelled`."
           },
           "operation_token": {
-            "anyOf": [
-              {
-                "type": "string",
-                "format": "uuid"
-              },
-              {
-                "type": "null"
-              }
-            ],
             "title": "Operation Token",
-            "description": "The operation token for Cobo Agentic Wallet app push notifications."
+            "description": "The operation token for Cobo Agentic Wallet app push notifications.",
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
           },
           "approved_by": {
-            "anyOf": [
-              {
-                "type": "string",
-                "format": "uuid"
-              },
-              {
-                "type": "null"
-              }
-            ],
             "title": "Approved By",
-            "description": "The ID of the principal that approved this operation. Null if not yet approved."
+            "description": "The ID of the principal that approved this operation. Null if not yet approved.",
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
           },
           "approved_at": {
-            "anyOf": [
-              {
-                "type": "string",
-                "format": "date-time"
-              },
-              {
-                "type": "null"
-              }
-            ],
             "title": "Approved At",
-            "description": "The timestamp when this operation was approved, in ISO 8601 format."
+            "description": "The timestamp when this operation was approved, in ISO 8601 format.",
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
           },
           "rejected_by": {
-            "anyOf": [
-              {
-                "type": "string",
-                "format": "uuid"
-              },
-              {
-                "type": "null"
-              }
-            ],
             "title": "Rejected By",
-            "description": "The ID of the principal that rejected this operation. Null if not rejected."
+            "description": "The ID of the principal that rejected this operation. Null if not rejected.",
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
           },
           "rejected_at": {
-            "anyOf": [
-              {
-                "type": "string",
-                "format": "date-time"
-              },
-              {
-                "type": "null"
-              }
-            ],
             "title": "Rejected At",
-            "description": "The timestamp when this operation was rejected, in ISO 8601 format."
+            "description": "The timestamp when this operation was rejected, in ISO 8601 format.",
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
           },
           "expires_at": {
             "type": "string",
@@ -8143,16 +7904,10 @@
             "description": "The execution result after the operation was approved and submitted."
           },
           "last_error": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
             "title": "Last Error",
-            "description": "The last error message, if execution failed."
+            "description": "The last error message, if execution failed.",
+            "type": "string",
+            "nullable": true
           },
           "created_at": {
             "type": "string",
@@ -8339,15 +8094,6 @@
         ],
         "title": "PrincipalCreateResult",
         "description": "Create principal response payload with idempotency metadata."
-      },
-      "PrincipalNodeStatus": {
-        "type": "string",
-        "enum": [
-          "active",
-          "archived"
-        ],
-        "title": "PrincipalNodeStatus",
-        "description": "``principal_nodes.status`` — lifecycle of a principal ↔ TSS node binding.\n\n* ``ACTIVE``: node currently participates in the wallet's MPC.\n* ``ARCHIVED``: node retired (e.g. restore success retires the old human's TSS node).\n  Keeps history while freeing up ``node_id`` for reuse under the partial unique index."
       },
       "PrincipalRead": {
         "properties": {
@@ -8546,6 +8292,47 @@
         "title": "RecentAddressRead",
         "description": "Recent recipient address from transfer history."
       },
+      "RecentTxSummary": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id",
+            "description": "Transaction UUID."
+          },
+          "request_id": {
+            "title": "Request Id",
+            "description": "Client-supplied request_id, if any.",
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "type": "string",
+            "title": "Status",
+            "description": "Transaction status label (e.g. success, processing, failed)."
+          },
+          "operation_type": {
+            "type": "string",
+            "title": "Operation Type",
+            "description": "Operation type (e.g. transfer, contract_call)."
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At",
+            "description": "When the transaction was submitted."
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "status",
+          "operation_type",
+          "created_at"
+        ],
+        "title": "RecentTxSummary",
+        "description": "Compact transaction record for recent-activity enrichment."
+      },
       "RecipeSearchResponse": {
         "properties": {
           "source": {
@@ -8670,6 +8457,13 @@
             "description": "Search type: 'vector', 'keyword', or 'hybrid'",
             "default": "keyword",
             "$ref": "#/components/schemas/KnowledgeSearchType",
+            "nullable": true
+          },
+          "wallet_id": {
+            "title": "Wallet Id",
+            "description": "Wallet UUID. When provided, active pacts that reference each matched recipe are embedded as `matching_pacts` in each result item.",
+            "type": "string",
+            "format": "uuid",
             "nullable": true
           }
         },
@@ -10089,37 +9883,6 @@
         ],
         "title": "StandardResponse[WalletReshareResponse]"
       },
-      "StandardResponse_WalletRestoreNodeResponse_": {
-        "properties": {
-          "success": {
-            "type": "boolean",
-            "title": "Success",
-            "default": true
-          },
-          "result": {
-            "$ref": "#/components/schemas/WalletRestoreNodeResponse"
-          },
-          "suggestion": {
-            "type": "string",
-            "title": "Suggestion",
-            "default": ""
-          },
-          "message": {
-            "type": "string",
-            "title": "Message",
-            "default": ""
-          },
-          "meta": {
-            "$ref": "#/components/schemas/PaginationMeta",
-            "nullable": true
-          }
-        },
-        "type": "object",
-        "required": [
-          "result"
-        ],
-        "title": "StandardResponse[WalletRestoreNodeResponse]"
-      },
       "StandardResponse_WalletTssCallbackResponse_": {
         "properties": {
           "success": {
@@ -10357,41 +10120,6 @@
         ],
         "title": "StandardResponse[list[FaucetTokenItem]]"
       },
-      "StandardResponse_list_PactTemplateRead__": {
-        "properties": {
-          "success": {
-            "type": "boolean",
-            "title": "Success",
-            "default": true
-          },
-          "result": {
-            "items": {
-              "$ref": "#/components/schemas/PactTemplateRead"
-            },
-            "type": "array",
-            "title": "Result"
-          },
-          "suggestion": {
-            "type": "string",
-            "title": "Suggestion",
-            "default": ""
-          },
-          "message": {
-            "type": "string",
-            "title": "Message",
-            "default": ""
-          },
-          "meta": {
-            "$ref": "#/components/schemas/PaginationMeta",
-            "nullable": true
-          }
-        },
-        "type": "object",
-        "required": [
-          "result"
-        ],
-        "title": "StandardResponse[list[PactTemplateRead]]"
-      },
       "StandardResponse_list_PrincipalRead__": {
         "properties": {
           "success": {
@@ -10611,7 +10339,6 @@
           "WALLET_MISSING_COBO_ID",
           "PAIR_SUBMIT_SUCCESS",
           "RESTORE_PAIR_SUBMIT_SUCCESS",
-          "WALLET_PAIR_WALLET_NOT_FOUND",
           "WALLET_PAIR_TOKEN_EXPIRED",
           "WALLET_PAIR_AGENT_NOT_FOUND",
           "WALLET_PAIR_CONFLICT",
@@ -10622,7 +10349,6 @@
           "ABI_ENCODE_TYPE_HINT",
           "PACT_SUBMIT_SUCCESS_UNPAIRED",
           "PACT_SUBMIT_SUCCESS_PAIRED",
-          "PACT_REVOKE_SUCCESS",
           "PACT_SUBMIT_ALWAYS_REVIEW_UNPAIRED",
           "PACT_SUBMIT_MISSING_RECIPE_SLUGS",
           "PACT_SUBMIT_CONTRACT_CALL_EMPTY_TARGET_IN",
@@ -11082,6 +10808,11 @@
             "type": "object",
             "nullable": true
           },
+          "cobo_transaction_id": {
+            "title": "Cobo Transaction Id",
+            "type": "string",
+            "nullable": true
+          },
           "failed_reason": {
             "title": "Failed Reason",
             "type": "string",
@@ -11221,16 +10952,10 @@
             "nullable": true
           },
           "transaction_hash": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
             "title": "Transaction Hash",
-            "description": "The on-chain transaction hash, if available."
+            "description": "The on-chain transaction hash, if available.",
+            "type": "string",
+            "nullable": true
           },
           "request_id": {
             "title": "Request Id",
@@ -11241,6 +10966,19 @@
           "description": {
             "title": "Description",
             "description": "Optional note from submission; duplicated from `data.description` when present.",
+            "type": "string",
+            "nullable": true
+          },
+          "fee": {
+            "title": "Fee",
+            "description": "Fee information reported by the downstream provider. Contains both the configured fee parameters (e.g. `max_fee_per_gas`, `gas_limit`) and the actual execution results (e.g. `fee_used`, `gas_used`, `effective_gas_price`). Populated after the provider processes the transaction.",
+            "additionalProperties": true,
+            "type": "object",
+            "nullable": true
+          },
+          "cobo_transaction_id": {
+            "title": "Cobo Transaction Id",
+            "description": "The downstream provider's transaction ID. Populated when the transaction is submitted to and acknowledged by the provider.",
             "type": "string",
             "nullable": true
           },
@@ -11550,16 +11288,10 @@
             "description": "The ID of the principal that owns this wallet."
           },
           "cobo_wallet_id": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
             "title": "Cobo Wallet Id",
-            "description": "The wallet ID assigned by Cobo WaaS."
+            "description": "The wallet ID assigned by Cobo WaaS.",
+            "type": "string",
+            "nullable": true
           },
           "status": {
             "$ref": "#/components/schemas/WalletStatus",
@@ -12029,17 +11761,11 @@
             "description": "The wallet being paired."
           },
           "claimer_principal_id": {
-            "anyOf": [
-              {
-                "type": "string",
-                "format": "uuid"
-              },
-              {
-                "type": "null"
-              }
-            ],
             "title": "Claimer Principal Id",
-            "description": "The ID of the principal who completed pairing. Null if not yet completed."
+            "description": "The ID of the principal who completed pairing. Null if not yet completed.",
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
           },
           "agent_principal_id": {
             "type": "string",
@@ -12126,17 +11852,11 @@
             "description": "The wallet being paired."
           },
           "claimer_principal_id": {
-            "anyOf": [
-              {
-                "type": "string",
-                "format": "uuid"
-              },
-              {
-                "type": "null"
-              }
-            ],
             "title": "Claimer Principal Id",
-            "description": "The ID of the principal who completed pairing. Null if not yet completed."
+            "description": "The ID of the principal who completed pairing. Null if not yet completed.",
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
           },
           "agent_principal_id": {
             "type": "string",
@@ -12273,16 +11993,10 @@
             "description": "The ID of the principal that owns this wallet."
           },
           "cobo_wallet_id": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
             "title": "Cobo Wallet Id",
-            "description": "The wallet ID assigned by Cobo WaaS."
+            "description": "The wallet ID assigned by Cobo WaaS.",
+            "type": "string",
+            "nullable": true
           },
           "status": {
             "$ref": "#/components/schemas/WalletStatus",
@@ -12366,40 +12080,6 @@
         ],
         "title": "WalletReshareResponse",
         "description": "WaaS TSS request id for the reshare operation."
-      },
-      "WalletRestoreNodeRequest": {
-        "properties": {
-          "node_id": {
-            "type": "string",
-            "minLength": 1,
-            "title": "Node Id",
-            "description": "The restored app TSS node id to bind to the authenticated principal."
-          }
-        },
-        "type": "object",
-        "required": [
-          "node_id"
-        ],
-        "title": "WalletRestoreNodeRequest",
-        "description": "Request payload for restoring the current app's local TSS node binding."
-      },
-      "WalletRestoreNodeResponse": {
-        "properties": {
-          "node_id": {
-            "type": "string",
-            "title": "Node Id"
-          },
-          "status": {
-            "$ref": "#/components/schemas/PrincipalNodeStatus"
-          }
-        },
-        "type": "object",
-        "required": [
-          "node_id",
-          "status"
-        ],
-        "title": "WalletRestoreNodeResponse",
-        "description": "Current principal node binding after restore."
       },
       "WalletStatus": {
         "type": "string",
