@@ -775,10 +775,9 @@ caw onboard
 
 | Option | Default | Description |
 |---|---|---|
-| `--invitation-code` | — | Invitation code |
 | `--agent-name` | — | Optional display name for the agent (provision) and, when set, names the wallet \"`<name>`'s Wallet\" |
 | `--session-id` | — | Interactive onboarding session id. If omitted or not found, a new session is created |
-| `--answers` | — | JSON object merged into collected answers, e.g. \{\"invitation_code\":\"X\",\"risk_ack\":true\} |
+| `--answers` | — | JSON object merged into collected answers, e.g. \{\"agent_name\":\"MyAgent\"\} |
 | `--wait` | — | Block until the wallet reaches active status (default: return immediately with current phase) |
 
 ### `bootstrap`
@@ -1029,7 +1028,8 @@ caw export-key
 
 Show a compact wallet snapshot: whether the backend is reachable (healthy),
 the current wallet lifecycle state (wallet_status, e.g. active or pending),
-and whether ownership pairing has been completed (wallet_paired boolean).
+whether ownership pairing has been completed (wallet_paired boolean),
+active pact count, and pending transaction count.
 
 ```bash
 caw status
@@ -1277,8 +1277,8 @@ caw pact
 
 ### `list`
 
-List pacts accessible to the authenticated principal. Filter by
---status (e.g. active, pending_approval, completed). Results are paginated.
+List pacts accessible to the authenticated principal. Defaults to --status active.
+Filter by --status (e.g. pending_approval, completed, expired, revoked) to see other states. Results are paginated.
 
 ```bash
 caw pact list
@@ -1286,7 +1286,7 @@ caw pact list
 
 | Option | Default | Description |
 |---|---|---|
-| `--status` | — | Filter by pact status: pending_approval, active, rejected, completed, expired, or revoked |
+| `--status` | `active` | Filter by pact status: pending_approval, active, rejected, completed, expired, or revoked |
 | `--limit` | `50` | Maximum number of results to return (1–200) |
 
 ### `status`

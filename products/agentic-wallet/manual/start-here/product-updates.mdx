@@ -3,6 +3,17 @@ title: "Product updates"
 description: "What's new in Cobo Agentic Wallet — app, API, and SDKs."
 ---
 
+## May 14, 2026 — Chain Kit, recipe matching, and onboarding improvements
+
+**Skills, CLI, SDKs, and API**
+
+- Recipe search now accepts a `wallet_id` parameter; results include active pacts already linked to each recipe, so agents can pick up existing pacts instead of creating duplicates
+- Pact detail responses now include the 5 most recent transactions and remaining quota (TX count, USD budget, time), giving agents better context before submitting
+- `caw onboard` drops the `--invitation-code` flag; the `next_action` guidance now explicitly passes `--session-id` in each poll command to prevent agents from accidentally starting a new session
+- `caw pact list` gains a `--status` flag to filter by pact state (default: `active`)
+
+---
+
 ## April 30, 2026 — Wallet recovery, expanded toolkit, and pact controls
 
 **Skills, CLI, SDKs, and API**
